@@ -30,6 +30,7 @@ class ListenerAndRetweeter(StreamListener):
             print ("Streamer Error: No Api loaded.")
             sys.exit(-1)
         self.api = api or API()
+        print("Twitter Automaton is running.")
 
     def process_tweet(self, json_arr):
         #print(json_arr) # Debugging purposes only!
@@ -43,9 +44,17 @@ class ListenerAndRetweeter(StreamListener):
 
             # Do not retweet the tweet that was made by our bot!
             if tweet_user['name'] not in TWITTER_SCREEN_NAME:
+                print("Detected Tweet from", tweet_user['screen_name'])
+
                 try:
                     print("Going to retweet", tweet_id)
                     self.api.retweet(tweet_id)
+                except Exception as e:
+                    pass  # Do nothing essentially
+
+                try:
+                    print("Going to fav", tweet_id)
+                    self.api.create_favorite(tweet_id)
                 except Exception as e:
                     pass  # Do nothing essentially
 
@@ -80,16 +89,11 @@ def mainloop():
     followers_array = []
     for follower_name in FOLLOWERS:
         profile = api.get_user(follower_name)
-        user = profile.screen_name
-        id = profile.id
-        print("%s : %s") %(user, id)
-        followers_array.add(id)
+        followers_array.append(str(profile.id))
 
-    print(followers_array)
     # Run the streamer.
-    #stream = Stream(auth = api.auth, listener=ListenerAndRetweeter(api))
-    #stream.filter(track=followers_array)
-
+    stream = Stream(auth = api.auth, listener=ListenerAndRetweeter(api))
+    stream.filter(follow=followers_array,track=[])
 
 if __name__ == '__main__':
     """ Entry point into the application """
