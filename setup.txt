@@ -1,0 +1,38 @@
+(1)
+$ cd ~/Developer
+$ mkdir py-lndontretweet
+$ cd py-lndontretweet
+
+
+(2)
+Setup our environment:
+$ python3 -m venv env
+
+
+(3) okay , Now lets activate virtualenv
+$ source env/bin/activate
+
+
+(4) Confirm we are using Python3
+$ python --version  # Should return Python 3.x
+
+
+(5) Now lets install our required libraries.
+$ pip3 install tweepy
+
+
+(6) Finally, create a file called ‘requirements.txt’ and add all the libraries this project will use. Make sure this file is located in the root of the project. Run this code.
+$ pip freeze > requirements.txt
+
+
+(7) Bugfix with Tweepy 3.4.0 (Link: https://github.com/tweepy/tweepy/issues/615)
+(i) Go to env/lib/python3/site-packages/tweepy/streaming.py
+(ii) Go to line 161 to replace it with this:
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+self._buffer += self._stream.read(read_len).decode('ascii')
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+(iii) Go line 171 and replace it with this:
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+self._buffer += self._stream.read(self._chunk_size).decode('ascii')
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
