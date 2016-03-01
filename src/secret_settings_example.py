@@ -12,8 +12,12 @@ ACCESS_TOKEN_SECRET="FILL ME IN"
 TWITTER_SCREEN_NAME = "FILL ME IN"  # Ex: "MikaSoftware"
 
 # A list of followers that will get automatically re-tweeted.
-FOLLOWERS = [
+RETWEET_FOLLOWERS = [
     "Eurasiasoft",
     "Duplexsoft",
-    "Mikasoftware",
+    "MikaSoftware",
+]
+
+LIKE_FOLLOWERS = [
+    "MikaSoftware",
 ]

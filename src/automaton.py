@@ -46,17 +46,19 @@ class ListenerAndRetweeter(StreamListener):
             if tweet_user['name'] not in TWITTER_SCREEN_NAME:
                 print("Detected Tweet from", tweet_user['screen_name'])
 
-                try:
-                    print("Going to retweet", tweet_id)
-                    self.api.retweet(tweet_id)
-                except Exception as e:
-                    pass  # Do nothing essentially
+                if tweet_user['name'] in RETWEET_FOLLOWERS:
+                    try:
+                        print("Going to retweet", tweet_id)
+                        self.api.retweet(tweet_id)
+                    except Exception as e:
+                        pass  # Do nothing essentially
 
-                try:
-                    print("Going to fav", tweet_id)
-                    self.api.create_favorite(tweet_id)
-                except Exception as e:
-                    pass  # Do nothing essentially
+                if tweet_user['name'] in LIKE_FOLLOWERS:
+                    try:
+                        print("Going to fav", tweet_id)
+                        self.api.create_favorite(tweet_id)
+                    except Exception as e:
+                        pass  # Do nothing essentially
 
     def on_data(self, json_string):
         json_arr  = json.loads(json_string)
@@ -87,8 +89,12 @@ def mainloop():
     # and extract their ID to be placed into an array of ID's our bot will
     # follow and automatically re-tweet.
     followers_array = []
-    for follower_name in FOLLOWERS:
-        profile = api.get_user(follower_name)
+    for screen_name in RETWEET_FOLLOWERS:
+        profile = api.get_user(screen_name)
+        followers_array.append(str(profile.id))
+
+    for screen_name in LIKE_FOLLOWERS:
+        profile = api.get_user(screen_name)
         followers_array.append(str(profile.id))
 
     # Run the streamer.
