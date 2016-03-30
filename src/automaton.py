@@ -51,15 +51,17 @@ class ListenerAndRetweeter(StreamListener):
                         print("Going to retweet", tweet_id)
                         self.api.retweet(tweet_id)
                     except Exception as e:
-                        pass  # Do nothing essentially
+                        print(e)  # Do nothing essentially
 
                 if tweet_user['name'] in LIKE_FOLLOWERS:
                     try:
                         print("Going to fav", tweet_id)
                         self.api.create_favorite(tweet_id)
                     except Exception as e:
-                        pass  # Do nothing essentially
-
+                        print(e)  # Do nothing essentially
+            else:
+                print("Not going to retweet/like my tweets.")
+    
     def on_data(self, json_string):
         json_arr  = json.loads(json_string)
         self.process_tweet(json_arr)
