@@ -44,23 +44,27 @@ class ListenerAndRetweeter(StreamListener):
 
             # Do not retweet the tweet that was made by our bot!
             if tweet_user['name'] not in TWITTER_SCREEN_NAME:
-                print("Detected Tweet from", tweet_user['screen_name'])
+                print("\n", "Detected Tweet from", tweet_user['screen_name'])
 
-                if tweet_user['name'] in RETWEET_FOLLOWERS:
+                if tweet_user['screen_name'] in RETWEET_FOLLOWERS:
                     try:
-                        print("Going to retweet", tweet_id)
+                        print("\t", "Going to retweet", tweet_id)
                         self.api.retweet(tweet_id)
                     except Exception as e:
-                        print(e)  # Do nothing essentially
+                        print("\t", "Not going to retweet", tweet_id, " because of error: ")
+                        print("\t", e)  # Do nothing essentially
+                else:
+                    print("\t","Cancelled Retweet:",tweet_user['screen_name'], "not in retweet followers.")
 
-                if tweet_user['name'] in LIKE_FOLLOWERS:
+                if tweet_user['screen_name'] in LIKE_FOLLOWERS:
                     try:
-                        print("Going to fav", tweet_id)
+                        print("\t", "Going to fav", tweet_id)
                         self.api.create_favorite(tweet_id)
                     except Exception as e:
-                        print(e)  # Do nothing essentially
-            else:
-                print("Not going to retweet/like my tweets.")
+                        print("\t", "Not going to fav", tweet_id, " because of error: ")
+                        print("\t", e)  # Do nothing essentially
+                else:
+                    print("\t", "Cancelled Fav:",tweet_user['screen_name'], "not in like followers.")
     
     def on_data(self, json_string):
         json_arr  = json.loads(json_string)
